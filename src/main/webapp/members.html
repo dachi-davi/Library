@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Members</title>
+</head>
+<body>
+
+<h1>👤 Members</h1>
+
+<form id="memberForm">
+    Name: <input id="name"><br>
+    Email: <input id="email"><br>
+    <button>Add Member</button>
+</form>
+
+<hr>
+
+<ul id="memberList"></ul>
+
+<script>
+    async function loadMembers() {
+        const res = await fetch("/members");
+        const data = await res.json();
+
+        const list = document.getElementById("memberList");
+        list.innerHTML = "";
+
+        data.forEach(m => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${m.id} - ${m.name} (${m.email})
+                <button onclick="deleteMember(${m.id})">Delete</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    async function deleteMember(id) {
+        await fetch("/members/" + id, { method: "DELETE" });
+        loadMembers();
+    }
+
+    document.getElementById("memberForm").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const member = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value
+        };
+
+        await fetch("/members", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(member)
+        });
+
+        loadMembers();
+    });
+
+    loadMembers();
+</script>
+
+</body>
+</html>

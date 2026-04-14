@@ -1,7 +1,61 @@
 package org.example;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
+import repository.DatabaseManager;
+import servlet.BookServlet;
+import servlet.BorrowingServlet;
+import servlet.MemberServlet;
+
+import java.io.File;
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    public static void main(String[] args) throws LifecycleException {
+        Tomcat tomcat = new Tomcat();
+        tomcat.setBaseDir("server");
+        tomcat.setPort(8080);
+
+
+        String docBase = new File("src/main/webapp").getAbsolutePath();
+
+        Context context = tomcat.addContext("", docBase);
+
+
+        Tomcat.addServlet(context, "default",
+                "org.apache.catalina.servlets.DefaultServlet");
+        context.addServletMappingDecoded("/", "default");
+
+
+
+
+//        Tomcat tomcat = new Tomcat();
+//        tomcat.setPort(8080);
+
+//        String baseDir = new File(".").getAbsolutePath();
+//        tomcat.setBaseDir(baseDir);
+
+//        var ctx = tomcat.addContext("", baseDir);
+
+        // 📘 BOOKS
+        Tomcat.addServlet(context, "BookServlet", new BookServlet());
+        context.addServletMappingDecoded("/books/*", "BookServlet");
+
+
+        // 👤 MEMBERS
+        Tomcat.addServlet(context, "MemberServlet", new MemberServlet());
+        context.addServletMappingDecoded("/members/*", "MemberServlet");
+
+        // 📚 BORROWING
+        Tomcat.addServlet(context, "BorrowingServlet", new BorrowingServlet());
+        context.addServletMappingDecoded("/borrow/*", "BorrowingServlet");
+
+        tomcat.start();
+
+        tomcat.getConnector();
+        System.out.println("🚀 Embedded Tomcat started on http://localhost:8080");
+
+        tomcat.getServer().await();
     }
+
 }

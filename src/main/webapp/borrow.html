@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Borrow</title>
+</head>
+<body>
+
+<h1>📚 Borrowing</h1>
+
+<!-- 🔷 Borrow -->
+<form id="borrowForm">
+    Book Code: <input id="bookCode"><br>
+    Member ID: <input id="memberId"><br>
+    <button>Borrow</button>
+</form>
+
+<!-- 🔷 Return -->
+<form id="returnForm">
+    Book Code: <input id="returnCode"><br>
+    <button>Return</button>
+</form>
+
+<hr>
+
+<ul id="borrowList"></ul>
+
+<script>
+    async function loadBorrowings() {
+        const res = await fetch("/borrow");
+        const data = await res.json();
+
+        const list = document.getElementById("borrowList");
+        list.innerHTML = "";
+
+        data.forEach(b => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                Book: ${b.bookCode}, Member: ${b.memberId},
+                Borrowed: ${b.borrowDate},
+                Returned: ${b.returnDate || "NOT RETURNED"}
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById("borrowForm").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        await fetch("/borrow", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                bookCode: document.getElementById("bookCode").value,
+                memberId: parseInt(document.getElementById("memberId").value)
+            })
+        });
+
+        loadBorrowings();
+    });
+
+    document.getElementById("returnForm").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        await fetch("/borrow/return", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                bookCode: document.getElementById("returnCode").value
+            })
+        });
+
+        loadBorrowings();
+    });
+
+    loadBorrowings();
+</script>
+
+</body>
+</html>

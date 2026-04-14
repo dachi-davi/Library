@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books</title>
+</head>
+<body>
+
+<h1>Books</h1>
+
+<!-- 🔷 Add Book -->
+<form id="bookForm">
+    Code: <input id="code"><br>
+    Title: <input id="title"><br>
+    Author: <input id="author"><br>
+    <button type="submit">Add Book</button>
+</form>
+
+<hr>
+
+<!-- 🔷 Book List -->
+<ul id="bookList"></ul>
+
+<script>
+    async function loadBooks() {
+        const res = await fetch("/books");
+        const books = await res.json();
+
+        const list = document.getElementById("bookList");
+        list.innerHTML = "";
+
+        books.forEach(b => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${b.code} - ${b.title} (${b.author})
+                <button onclick="deleteBook('${b.code}')">Delete</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    async function deleteBook(code) {
+        await fetch("/books/" + code, { method: "DELETE" });
+        loadBooks();
+    }
+
+    document.getElementById("bookForm").addEventListener("submit", async e => {
+        e.preventDefault();
+
+        const book = {
+            code: document.getElementById("code").value,
+            title: document.getElementById("title").value,
+            author: document.getElementById("author").value
+        };
+
+        await fetch("/books", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(book)
+        });
+
+        loadBooks();
+    });
+
+    loadBooks();
+</script>
+
+</body>
+</html>

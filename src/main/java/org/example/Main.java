@@ -27,26 +27,13 @@ public class Main {
         context.addServletMappingDecoded("/", "default");
 
 
-
-
-//        Tomcat tomcat = new Tomcat();
-//        tomcat.setPort(8080);
-
-//        String baseDir = new File(".").getAbsolutePath();
-//        tomcat.setBaseDir(baseDir);
-
-//        var ctx = tomcat.addContext("", baseDir);
-
-        // 📘 BOOKS
         Tomcat.addServlet(context, "BookServlet", new BookServlet());
         context.addServletMappingDecoded("/books/*", "BookServlet");
 
 
-        // 👤 MEMBERS
         Tomcat.addServlet(context, "MemberServlet", new MemberServlet());
         context.addServletMappingDecoded("/members/*", "MemberServlet");
 
-        // 📚 BORROWING
         Tomcat.addServlet(context, "BorrowingServlet", new BorrowingServlet());
         context.addServletMappingDecoded("/borrow/*", "BorrowingServlet");
 

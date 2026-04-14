@@ -92,18 +92,6 @@ public class DatabaseManager {
             );
         """);
 
-//            stmt.execute("""
-//            CREATE INDEX IF NOT EXISTS idx_borrow_book
-//            ON borrowings(book_code);
-//        """);
-//
-//            stmt.execute("""
-//            CREATE INDEX IF NOT EXISTS idx_borrow_member
-//            ON borrowings(member_id);
-//        """);
-//
-//            System.out.println("Database initialized!");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

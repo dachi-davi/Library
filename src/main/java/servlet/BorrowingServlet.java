@@ -10,13 +10,11 @@ import service.BorrowingService;
 import java.io.IOException;
 import java.util.Map;
 
-//@WebServlet("/borrow/*")
 public class BorrowingServlet extends HttpServlet {
 
     private BorrowingService service = new BorrowingService();
     private ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();;
 
-    // 🔷 GET /borrow
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -33,7 +31,6 @@ public class BorrowingServlet extends HttpServlet {
         }
     }
 
-    // 🔷 POST /borrow  OR /borrow/return
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -44,7 +41,6 @@ public class BorrowingServlet extends HttpServlet {
             Map<String, Object> body =
                     mapper.readValue(req.getInputStream(), Map.class);
 
-            // 🔷 RETURN
             if (path != null && path.equals("/return")) {
 
                 String bookCode = (String) body.get("bookCode");
@@ -55,7 +51,6 @@ public class BorrowingServlet extends HttpServlet {
                 return;
             }
 
-            // 🔷 BORROW
             String bookCode = (String) body.get("bookCode");
             int memberId = (int) body.get("memberId");
 

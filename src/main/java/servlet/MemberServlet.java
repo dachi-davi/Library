@@ -9,13 +9,11 @@ import service.MemberService;
 
 import java.io.IOException;
 
-//@WebServlet("/members/*")
 public class MemberServlet extends HttpServlet {
 
     private MemberService service = new MemberService();
     private ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
-    // 🔷 GET /members
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -35,7 +33,6 @@ public class MemberServlet extends HttpServlet {
         }
     }
 
-    // 🔷 POST /members
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -45,12 +42,10 @@ public class MemberServlet extends HttpServlet {
 
             Member saved = service.add(m);
 
-            // ✅ ONLY write here (success)
             resp.setContentType("application/json");
             mapper.writeValue(resp.getOutputStream(), saved);
 
         } catch (Exception e) {
-            // ❗ DO NOT reset
             resp.setStatus(422);
             resp.setContentType("application/json");
 
@@ -59,7 +54,6 @@ public class MemberServlet extends HttpServlet {
         }
     }
 
-    // 🔷 PUT /members/{id}
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -72,7 +66,6 @@ public class MemberServlet extends HttpServlet {
 
             service.update(id, m);
 
-//            resp.getWriter().write("Updated");
             resp.setContentType("application/json");
             mapper.writeValue(resp.getOutputStream(),
                     java.util.Map.of("message", "Updated"));
@@ -82,7 +75,6 @@ public class MemberServlet extends HttpServlet {
         }
     }
 
-    // 🔷 DELETE /members/{id}
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -93,7 +85,6 @@ public class MemberServlet extends HttpServlet {
 
             service.delete(id);
 
-//            resp.getWriter().write("Deleted");
             resp.setContentType("application/json");
             mapper.writeValue(resp.getOutputStream(),
                     java.util.Map.of("message", "Updated"));

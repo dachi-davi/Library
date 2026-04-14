@@ -16,7 +16,6 @@ public class BookServlet extends HttpServlet {
     private BookService service = new BookService();
     private ObjectMapper mapper = new ObjectMapper();
 
-    // 🔷 GET /books
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -33,7 +32,6 @@ public class BookServlet extends HttpServlet {
         }
     }
 
-    // 🔷 POST /books
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -53,7 +51,6 @@ public class BookServlet extends HttpServlet {
         }
     }
 
-    // 🔷 PUT /books/{code}
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -63,9 +60,6 @@ public class BookServlet extends HttpServlet {
 
             String uri = req.getRequestURI();
             String code = uri.substring(uri.lastIndexOf("/") + 1);
-
-//            String path = req.getPathInfo(); // /123
-//            String code = path.substring(1);
 
             Book book = mapper.readValue(req.getInputStream(), Book.class);
 
@@ -79,14 +73,12 @@ public class BookServlet extends HttpServlet {
         }
     }
 
-    // 🔷 DELETE /books/{code}
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         try {
             String path = req.getPathInfo();
-//            String code = path.substring(1);
             String uri = req.getRequestURI();
             String code = uri.substring(uri.lastIndexOf("/") + 1);
 

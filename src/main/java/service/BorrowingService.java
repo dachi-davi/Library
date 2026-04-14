@@ -13,7 +13,6 @@ import java.util.List;
 public class BorrowingService {
     private Connection conn = DatabaseManager.getInstance().getConnection();
 
-    // 🔷 GET ALL BORROWINGS
     public List<Borrowing> getAll() throws SQLException {
         List<Borrowing> list = new ArrayList<>();
 
@@ -34,10 +33,8 @@ public class BorrowingService {
         return list;
     }
 
-    // 🔷 BORROW BOOK
     public void borrowBook(String bookCode, int memberId) throws Exception {
 
-        // ✅ 1. Check book exists
         PreparedStatement bookCheck = conn.prepareStatement(
                 "SELECT 1 FROM books WHERE code = ?");
         bookCheck.setString(1, bookCode);
@@ -46,7 +43,6 @@ public class BorrowingService {
             throw new Exception("Book does not exist");
         }
 
-        // ✅ 2. Check member exists
         PreparedStatement memberCheck = conn.prepareStatement(
                 "SELECT 1 FROM members WHERE id = ?");
         memberCheck.setInt(1, memberId);
@@ -55,7 +51,6 @@ public class BorrowingService {
             throw new Exception("Member does not exist");
         }
 
-        // ❗ 3. Check if already borrowed
         PreparedStatement check = conn.prepareStatement(
                 "SELECT 1 FROM borrowings WHERE book_code = ? AND return_date IS NULL"
         );
@@ -65,7 +60,6 @@ public class BorrowingService {
             throw new Exception("Book is already borrowed");
         }
 
-        // ✅ 4. Insert borrowing
         PreparedStatement stmt = conn.prepareStatement(
                 "INSERT INTO borrowings (book_code, member_id, borrow_date) VALUES (?, ?, NOW())"
         );
@@ -76,7 +70,6 @@ public class BorrowingService {
         stmt.executeUpdate();
     }
 
-    // 🔷 RETURN BOOK
     public void returnBook(String bookCode) throws Exception {
 
         PreparedStatement stmt = conn.prepareStatement(

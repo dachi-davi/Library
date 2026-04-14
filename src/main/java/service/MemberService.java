@@ -11,7 +11,6 @@ import java.util.List;
 public class MemberService {
     private Connection conn = DatabaseManager.getInstance().getConnection();
 
-    // 🔷 GET ALL
     public List<Member> getAll() throws SQLException {
         List<Member> list = new ArrayList<>();
 
@@ -30,10 +29,8 @@ public class MemberService {
         return list;
     }
 
-    // 🔷 ADD MEMBER
     public Member add(Member m) throws Exception {
 
-        // ❗ email must be unique
         PreparedStatement check = conn.prepareStatement(
                 "SELECT 1 FROM members WHERE email = ?");
         check.setString(1, m.getEmail());
@@ -42,7 +39,6 @@ public class MemberService {
             throw new Exception("Email already exists");
         }
 
-        // ✅ insert (ID auto-generated)
         PreparedStatement stmt = conn.prepareStatement(
                 "INSERT INTO members (name, email, join_date) VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
@@ -54,7 +50,6 @@ public class MemberService {
 
         stmt.executeUpdate();
 
-        // 🔥 get generated ID
         ResultSet keys = stmt.getGeneratedKeys();
         if (keys.next()) {
             m.setId(keys.getInt(1));
@@ -65,10 +60,8 @@ public class MemberService {
         return m;
     }
 
-    // 🔷 UPDATE
     public void update(int id, Member m) throws Exception {
 
-        // ❗ prevent duplicate email (excluding current user)
         PreparedStatement check = conn.prepareStatement(
                 "SELECT 1 FROM members WHERE email = ? AND id != ?");
         check.setString(1, m.getEmail());
@@ -89,7 +82,6 @@ public class MemberService {
         stmt.executeUpdate();
     }
 
-    // 🔷 DELETE
     public void delete(int id) throws SQLException {
         PreparedStatement stmt = conn.prepareStatement(
                 "DELETE FROM members WHERE id = ?");

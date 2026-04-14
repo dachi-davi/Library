@@ -3,6 +3,7 @@ package service;
 import model.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import repository.DatabaseManager;
 
 import java.util.List;
 
@@ -14,8 +15,11 @@ class MemberServiceTest {
     private MemberService service;
 
     @BeforeEach
-    void setup() {
+    void setup() throws Exception {
         service = new MemberService();
+
+        var conn = DatabaseManager.getInstance().getConnection();
+        conn.createStatement().execute("DELETE FROM members");
     }
 
     @Test

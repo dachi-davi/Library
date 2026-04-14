@@ -40,7 +40,9 @@ public class Main {
         tomcat.start();
 
         tomcat.getConnector();
-        System.out.println("🚀 Embedded Tomcat started on http://localhost:8080");
+        System.out.println("books http://localhost:8080/books.html");
+        System.out.println("members http://localhost:8080/members.html");
+        System.out.println("borrow http://localhost:8080/borrow.html");
 
         tomcat.getServer().await();
     }
